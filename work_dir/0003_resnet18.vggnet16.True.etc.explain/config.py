@@ -15,7 +15,7 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = ['resnet18', 'vgg16'],
+    name = ['resnet18', 'vggnet16'],
     imagenet_pretrained = True,
     n_class = 4,
     max_epoch = 50,
