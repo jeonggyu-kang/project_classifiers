@@ -8,7 +8,7 @@ def get_hyperparameters(config = None):
         _load(config)
 
     ret = {}
-    ret.update( model_dict )         # updata: function for updating dictionary
+    ret.update( model_dict )
     ret.update( data_dict )
 
     return ret
@@ -18,10 +18,10 @@ model_dict = dict(
     name = ['mobilenetv2_050'],
     imagenet_pretrained = True,
     n_class = 5,
-    max_epoch = 30,
+    max_epoch = 100,
     learning_rate = 1e-4,
     # mile_stone = None,
-    mile_stone = [20, 25],
+    mile_stone = [80, 90],
     decay_rate = 0.1,
     extra = ['etc', 'explain']
 )
@@ -29,24 +29,25 @@ model_dict = dict(
 train_pipeline = [
     dict(
         type = 'Resize',
-        width = 224,
-        height = 224
+        width = 448,
+        height = 448
+    ),
+    dict(
+        type= 'ToTensor'
+    ),
+]
+test_pipeline = [
+    dict(
+        type = 'Resize',
+        width = 448,
+        height = 448
     ),
     dict(
         type= 'ToTensor'
     ),
 ]
 
-test_pipeline = [
-    dict(
-        type = 'Resize',
-        width = 224,
-        height = 224
-    ),
-    dict(
-        type= 'ToTensor'
-    ),
-]
+
 
 
 # dataset-related params
@@ -65,6 +66,7 @@ data_dict = dict(
         ann_file = '/home/compu/Projects/cxrecg_cac/Data/test_dataset.parquet',
         pipeline = test_pipeline
     ),
+
 )
 
 def _save():

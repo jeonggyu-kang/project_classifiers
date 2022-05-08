@@ -4,8 +4,6 @@ import torch
 import torch.nn as nn
 
 
-
-
 def get_eleme_num(model, x):
     y = model(x)
     _, C, H, W = y.shape
@@ -34,11 +32,13 @@ class CustomizationNet(nn.Module):
         return pred
 
 if __name__ == '__main__':
+
     model_names = timm.list_models('*mobile*', pretrained=True)
     #print(len(model_names))
-    #print(model_names)
+    print(model_names)
 
     for model_name in model_names:
+        print(model_name)
         model = CustomizationNet(num_classes = 4, network_name = model_name, image_size=(1,3,224,224))
 
         image = torch.rand(2, 3, 224, 224)
