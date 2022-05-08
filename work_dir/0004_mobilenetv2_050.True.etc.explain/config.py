@@ -15,13 +15,13 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = ['vgg16'],
+    name = ['mobilenetv2_050'],
     imagenet_pretrained = True,
     n_class = 5,
-    max_epoch = 100,
+    max_epoch = 30,
     learning_rate = 1e-4,
     # mile_stone = None,
-    mile_stone = [40, 80],
+    mile_stone = [20, 25],
     decay_rate = 0.1,
     extra = ['etc', 'explain']
 )
@@ -52,7 +52,7 @@ test_pipeline = [
 # dataset-related params
 data_dict = dict(
     save_root = './work_dir',
-    batch_size = 8,
+    batch_size = 4,
     workers_per_gpu = 1,
 
     train = dict(

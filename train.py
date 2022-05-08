@@ -1,4 +1,5 @@
 # train process main script
+import os
 
 import torch
 
@@ -50,7 +51,9 @@ def main():
         )
 
         #writer = get_logger(args['save_root'] )
-        writer = None
+
+        save_path = os.path.join(args['save_root'], model_name)
+        writer = get_logger(save_path)
 
 
         trainer(                                      # from runner.py

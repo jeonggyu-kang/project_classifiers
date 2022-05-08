@@ -15,7 +15,7 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = ['vgg16'],
+    name = ['mobilenetv2_050'],
     imagenet_pretrained = True,
     n_class = 5,
     max_epoch = 100,
