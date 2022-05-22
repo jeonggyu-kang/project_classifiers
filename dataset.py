@@ -1,4 +1,5 @@
 import os
+import sys
 
 import numpy as np
 import cv2
@@ -14,7 +15,7 @@ from utils import build_transform_from_cfg
 
 
 
-def get_dataloader(data_dir, ann_path, mode, pipeline, batch_size, num_workers):
+def get_dataloader(dataset, data_dir, ann_path, mode, pipeline, batch_size, num_workers):
     if mode == 'train':
         is_training = True
         shuffle = True
@@ -31,7 +32,8 @@ def get_dataloader(data_dir, ann_path, mode, pipeline, batch_size, num_workers):
 
     transform = build_transform_from_cfg(pipeline)
 
-    dataset = CoronaryArteryDataset(df, data_dir, transform, is_training = is_training)
+    #dataset = CoronaryArteryDataset(df, data_dir, transform, is_training = is_training)
+    dataset = getattr(sys.modules[__name__], dataset)(df, data_dir, transform, is_training = is_training)
 
     dataloader = DataLoader(
         dataset,
@@ -99,3 +101,48 @@ class CoronaryArteryDataset(Dataset):
         image = torch.cat([image,image, image], dim = 0).to(torch.float32)
 
         return image, score
+
+
+
+class AGEDataset(Dataset):
+
+    def __init__(self, df, data_dir, transform, is_training=False):
+        super(AGEDataset, self).__init__()
+        self.data = df.values
+        self.transform = transform
+        self.is_training = is_training
+
+        self.data_dir = data_dir
+
+
+        # TODO: modify
+        self.range_min = 1
+        self.range_max = 100
+        self.range_max -= self.range_min
+
+
+    def __len__(self):
+        return len(self.data) 
+
+    def __getitem__(self, idx):
+        dcm_path,  score = self.data[idx] # score dynamic range (600-3000)
+        score = (score - self.range_min) / self.range_max
+
+
+        array_path = os.path.join(self.data_dir,dcm_path.replace('.dcm','.npy'))
+        image = np.load(array_path)
+
+        image = image - image.min()
+        image = image / image.max()
+
+        transformed = self.transform({'image':image})
+        image = transformed['image']
+        x = torch.cat([image,image, image], dim = 0).to(torch.float32)
+
+
+        y = torch.FloatTensor([score])
+
+        return x, y
+    
+if __name__ == '__main__':
+    pass

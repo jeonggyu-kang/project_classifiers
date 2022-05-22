@@ -5,7 +5,7 @@ import random
 source_file = "./cxr_clinical.csv"
 dest_dir = "./data"
 input_file = "file_name"
-outcome = "cac_category"
+outcome = "age"
 train_ratio = 85
 
 

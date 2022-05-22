@@ -33,7 +33,7 @@ class CustomizationNet(nn.Module):
 
 if __name__ == '__main__':
 
-    model_names = timm.list_models('*mobile*', pretrained=True)
+    model_names = timm.list_models('*esn*', pretrained=True)
     #print(len(model_names))
     print(model_names)
 

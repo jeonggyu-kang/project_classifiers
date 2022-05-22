@@ -18,6 +18,7 @@ def trainer(
     scheduler,
     meta, 
     writer = None,
+    task_type = 'classification'
 ):
 
     save_every = meta['save_every']
@@ -26,13 +27,13 @@ def trainer(
 
 
     for ep in range(1, max_epoch+1):
-        train(ep, max_epoch, model, train_loader, loss_fn, optimizer, writer, print_every)
+        train(ep, max_epoch, model, train_loader, loss_fn, optimizer, writer, print_every, task_type)
         if scheduler is not None:
             scheduler.step()
 
         
         if ep % test_every == 0:
-            acc = test(ep, max_epoch, model, test_loader, writer)
+            acc = test(ep, max_epoch, model, test_loader, writer, task_type)
             
             writer.update(model, acc)
         
@@ -63,11 +64,11 @@ def tester(
 
 
 
-def train(ep, max_epoch, model, train_loader, loss_fn, optimizer, writer, _print_every):
+def train(ep, max_epoch, model, train_loader, loss_fn, optimizer, writer, _print_every, task_type):
     model.train()
     mean_loss = 0.0
 
-    print_every = len(train_loader) // _print_every
+    print_every = len(train_loader) // _print_every     
 
     preds = []
     gts = []
@@ -110,16 +111,17 @@ def train(ep, max_epoch, model, train_loader, loss_fn, optimizer, writer, _print
     preds = torch.cat(preds)
     gts = torch.cat(gts)
 
-    acc = calc_accuracy(preds, gts)
+    if task_type == 'classification':
+        acc = calc_accuracy(preds, gts)
 
-    print('Epoch[{}/{}] Train Acc: {:.4f}'.format(ep,max_epoch, acc))
-    print('='*40)
+        print('Epoch[{}/{}] Train Acc: {:.4f}'.format(ep,max_epoch, acc))
+        print('='*40)
 
-    writer.add_scalar('train/acc', acc, ep)
+        writer.add_scalar('train/acc', acc, ep)
 
 
 @torch.no_grad()                                         # stop calculating gradient
-def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_mining = False, confusion_matrix=False):
+def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_mining = False, confusion_matrix=False, task_type = 'classification'):
     model.eval()
 
     preds = []
@@ -145,11 +147,16 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
     preds = torch.cat(preds)
     gts = torch.cat(gts)
 
-    acc = calc_accuracy(preds, gts)
-    print ('Epoch[{}/{}] TestAcc: {:.4f}'.format(ep, max_epoch, acc))
-    print ('+'*40)
+    if task_type == 'classification':
 
-    writer.add_scalar('test/acc', acc, ep)
+        acc = calc_accuracy(preds, gts)
+        print ('Epoch[{}/{}] TestAcc: {:.4f}'.format(ep, max_epoch, acc))
+        print ('+'*40)
+
+        writer.add_scalar('test/acc', acc, ep)
+    
+    else:
+        acc = 1.0
 
     if hard_sample_mining:
         index2cls_name = {

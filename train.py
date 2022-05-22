@@ -18,9 +18,19 @@ def main():
 
     for model_name in args['name']:              # loop in various models
 
+        
         model = get_model(model_name, args['n_class'])
 
-        loss = torch.nn.CrossEntropyLoss()
+        if args['loss'] in ['ce', 'cross-entropy']:
+            loss = torch.nn.CrossEntropyLoss()
+            task_type = 'classification'
+
+        elif args['loss'] in ['mse', 'mean_squared_error']:
+            loss = torch.nn.MSELoss()
+            task_type = 'regression'
+        else:
+            raise ValueError
+
         optimizer = torch.optim.Adam(model.parameters(), lr=args['learning_rate'])
 
         if args.get('mile_stone') is not None:
@@ -32,6 +42,7 @@ def main():
         mode = 'train'
 
         train_loader = get_dataloader(
+            dataset = args['dataset'],
             data_dir = args[mode]['img_dir'],
             ann_path = args[mode]['ann_file'],
             mode = mode,
@@ -42,6 +53,7 @@ def main():
 
         mode = 'test'
         test_loader = get_dataloader(
+            dataset = args['dataset'],
             data_dir = args[mode]['img_dir'],
             ann_path = args[mode]['ann_file'],
             mode = mode,
@@ -69,7 +81,8 @@ def main():
                 'print_every' : 5,
                 'test_every' : 10
             },
-            writer = writer
+            writer = writer,
+            task_type = task_type
         )
 
 

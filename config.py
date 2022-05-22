@@ -17,13 +17,15 @@ def get_hyperparameters(config = None):
 model_dict = dict(                  
     name = [ 'vgg16' ],
     imagenet_pretrained = True,
-    n_class = 5,
+    n_class = 1,
     max_epoch = 100,
     learning_rate = 1e-4,
     # mile_stone = None,
     mile_stone = [80, 90],
     decay_rate = 0.1,
-    extra = ['etc', 'explain']
+    #loss = 'ce',   # cross-entropy
+    loss = 'mse',    # mean squared error
+    extra = ['age_prediction_model']
 )
 
 train_pipeline = [
@@ -51,6 +53,8 @@ test_pipeline = [
 
 # dataset-related params
 data_dict = dict(
+    #dataset = 'CoronaryArteryDataset',
+    dataset = 'AGEDataset',
     save_root = './work_dir',
     batch_size = 64,
     workers_per_gpu = 1,

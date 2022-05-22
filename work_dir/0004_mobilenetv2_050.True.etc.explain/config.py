@@ -15,7 +15,7 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = ['mobilenetv2_050'],
+    name = ['coat_lite_mini', 'coat_lite_small', 'coat_lite_tiny', 'coat_mini', 'coat_tiny'],
     imagenet_pretrained = True,
     n_class = 5,
     max_epoch = 30,
@@ -52,7 +52,7 @@ test_pipeline = [
 # dataset-related params
 data_dict = dict(
     save_root = './work_dir',
-    batch_size = 4,
+    batch_size = 16,
     workers_per_gpu = 1,
 
     train = dict(
