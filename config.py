@@ -15,13 +15,13 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = ['vgg16'],
+    name = [ 'vgg16' ],
     imagenet_pretrained = True,
     n_class = 5,
     max_epoch = 100,
     learning_rate = 1e-4,
     # mile_stone = None,
-    mile_stone = [40, 80],
+    mile_stone = [80, 90],
     decay_rate = 0.1,
     extra = ['etc', 'explain']
 )
@@ -52,17 +52,17 @@ test_pipeline = [
 # dataset-related params
 data_dict = dict(
     save_root = './work_dir',
-    batch_size = 8,
+    batch_size = 64,
     workers_per_gpu = 1,
 
     train = dict(
-        img_dir = '/home/compu/Projects/cxrecg_cac/Data/resized_224',
-        ann_file = '/home/compu/Projects/cxrecg_cac/Data/train_dataset.parquet',
+        img_dir = '/home/compu/Projects/project_classifiers/data',
+        ann_file = '/home/compu/Projects/project_classifiers/data/train_dataset.parquet',
         pipeline = train_pipeline
     ),
     test = dict(
-        img_dir = '/home/compu/Projects/cxrecg_cac/Data/resized_224',
-        ann_file = '/home/compu/Projects/cxrecg_cac/Data/test_dataset.parquet',
+        img_dir = '/home/compu/Projects/project_classifiers/data',
+        ann_file = '/home/compu/Projects/project_classifiers/data/test_dataset.parquet',
         pipeline = test_pipeline
     ),
 )

@@ -79,7 +79,7 @@ class CoronaryArteryDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
-        dcm_path, pat_id, study_date, score = self.data[index]
+        dcm_path,  score = self.data[index]
         
         # array_path = os.path.join('../Data/resized_224/',dcm_path.replace('.dcm','.npy'))
         array_path = os.path.join(self.data_dir,dcm_path.replace('.dcm','.npy'))

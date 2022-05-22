@@ -2,6 +2,10 @@ from tqdm import tqdm
 import torch
 
 from evaluation import calc_accuracy, get_confusion_matrix_image
+from evaluation import get_sample_dict, update_hardsample_indice
+import torchvision.utils as vutils
+from utils import tensor_rgb2bgr
+
 
 
 def trainer(
@@ -121,6 +125,8 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
     preds = []
     gts = []
 
+    hardsample_dict = get_sample_dict()
+
     for batch in test_loader:
         x, y = batch
         x = x.cuda()
@@ -129,6 +135,9 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
         out = model(x)
         preds.append(out.data.cpu())
         gts.append(y.data.cpu())
+
+        if hard_sample_mining:
+            hardsample_dict = update_hardsample_indice(out.data.cpu(), y.data.cpu(), hardsample_dict,x )
 
         if pbar is not None:
             pbar.update()
@@ -142,9 +151,28 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
 
     writer.add_scalar('test/acc', acc, ep)
 
-    # Todo: implement
     if hard_sample_mining:
-        pass
+        index2cls_name = {
+            0: 0,
+            1: 1,
+            2: 2,
+            3: 3,
+            4: 4,
+        }
+
+        for gt_k in hardsample_dict:
+            for pred_k, samples in hardsample_dict[gt_k].items():
+
+                if samples:
+                    num_sample = len(samples)
+                    text = str(index2cls_name[gt_k]) + '/' + str(index2cls_name[pred_k])
+
+                    samples = torch.cat(samples)
+
+                    grid_samples = vutils.make_grid(tensor_rgb2bgr(samples), normalize = True, scale_each = True)
+                    writer.add_image(text, grid_samples, 0)
+
+                    print('{} : {}'.format(text, num_sample))
 
     if confusion_matrix:
         cm_image = get_confusion_matrix_image(preds, gts)

@@ -73,3 +73,52 @@ def get_confusion_matrix_image(pred, gt, normalize=True):
     cm_tensor = _plot_confusion_matrix(cm, normalize=normalize, labels = True)
 
     return cm_tensor
+
+def plot_dataset_dist(sample_dict, show=False):
+    class_indice = list(sample_dict.keys())
+    class_indice.sort()
+
+    height = [sample_dict[x] for x in class_indice]
+
+    x_pos = np.arange(len(class_indice))
+
+    fig = plt.figure(figsize = (8,8))
+    plt.bar(x_pos, height, color = ['black', 'red', 'green', 'blue', 'cyan'])
+
+    plt.xticks(x_pos, class_indice)
+
+    if show:
+        plt.show()
+
+    fig.canvas.draw()
+    fig_arr = np.array(fig.canvas.renderer._renderer)
+
+    return fig_arr
+
+
+
+def get_sample_dict():
+
+    ret = {}
+
+    for k in range(5):
+        ret[k] = {}
+        for v in range(5):
+            if k == v:
+                continue
+            ret[k][v] = []
+
+    return ret
+
+def update_hardsample_indice(pred, gt, hardsample_dict, images):
+
+    false_indices = (pred.argmax(1) != gt).numpy()
+    false_indices = np.where(false_indices == True)
+
+    for idx in false_indices[0]:
+        gt_key = int(gt[idx].item())
+        pred_key = int(pred[idx].argmax().item())
+
+        hardsample_dict[gt_key][pred_key].append(images[idx].unsqueeze(dim=0))
+
+    return hardsample_dict
