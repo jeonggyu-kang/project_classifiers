@@ -31,9 +31,9 @@ def trainer(
         if scheduler is not None:
             scheduler.step()
 
-        
-        if ep % test_every == 0:
-            acc = test(ep, max_epoch, model, test_loader, writer, task_type)
+        if True:
+        #if ep % test_every == 0:
+            acc = test(ep, max_epoch, model, test_loader, writer, task_type = task_type)
             
             writer.update(model, acc)
         
