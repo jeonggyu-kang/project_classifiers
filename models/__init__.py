@@ -1,8 +1,8 @@
 from .mymodel import CustomizationNet 
 import torch
 
-def get_model(model_name, n_classes, ckpt_path = None):
-    model = CustomizationNet( n_classes, model_name, (2, 3 , 224, 224) )
+def get_model(model_name, n_classes, input_size, ckpt_path = None):
+    model = CustomizationNet( n_classes, model_name, input_size )
 
 
     if ckpt_path is not None:
