@@ -51,6 +51,7 @@ def main():
             pipeline = args[mode]['pipeline']
         )
 
+        
         mode = 'test'
         test_loader = get_dataloader(
             dataset = args['dataset'],

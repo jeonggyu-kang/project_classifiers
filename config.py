@@ -60,13 +60,13 @@ data_dict = dict(
     workers_per_gpu = 1,
 
     train = dict(
-        img_dir = '/home/compu/Projects/project_classifiers/data',
-        ann_file = '/home/compu/Projects/project_classifiers/data/train_dataset.parquet',
+        img_dir = '/mnt/project_classifiers/data',
+        ann_file = '/mnt/project_classifiers/data/train_dataset.parquet',
         pipeline = train_pipeline
     ),
     test = dict(
-        img_dir = '/home/compu/Projects/project_classifiers/data',
-        ann_file = '/home/compu/Projects/project_classifiers/data/test_dataset.parquet',
+        img_dir = '/mnt/project_classifiers/data',
+        ann_file = '/mnt/project_classifiers/data/test_dataset.parquet',
         pipeline = test_pipeline
     ),
 )

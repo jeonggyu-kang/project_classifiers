@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import torch
 
-from evaluation import calc_accuracy, get_confusion_matrix_image
+from evaluation import calc_accuracy, get_confusion_matrix_image, get_mean_squared_error
 from evaluation import get_sample_dict, update_hardsample_indice
 import torchvision.utils as vutils
 from utils import tensor_rgb2bgr
@@ -34,6 +34,9 @@ def trainer(
 
         if ep % test_every == 0:
             acc = test(ep, max_epoch, model, test_loader, writer, task_type = task_type)
+
+            if task_type == 'regression':
+                acc *= -1
             
             writer.update(model, acc)
         
@@ -48,7 +51,8 @@ def tester(
     test_loader,
     writer,
     hard_sample_mining,
-    confusion_matrix
+    confusion_matrix,
+    task_type
 ):
     pbar=tqdm(total=len(test_loader))
     acc = test(
@@ -56,7 +60,8 @@ def tester(
         model, test_loader, writer,
         pbar = pbar,
         hard_sample_mining = hard_sample_mining,
-        confusion_matrix = confusion_matrix
+        confusion_matrix = confusion_matrix,
+        task_type = task_type
     )
     
     writer.close()
@@ -118,6 +123,13 @@ def train(ep, max_epoch, model, train_loader, loss_fn, optimizer, writer, _print
         print('='*40)
 
         writer.add_scalar('train/acc', acc, ep)
+    
+    elif task_type == 'regression':
+        err = get_mean_squared_error(preds, gts)
+        print('Epoch[{}/{}] Train Err: {:.4f}'.format(ep,max_epoch, err))
+        print ('='*40)
+
+        writer.add_scalar('train/err', err, ep)
 
 
 @torch.no_grad()                                         # stop calculating gradient
@@ -154,9 +166,15 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
         print ('+'*40)
 
         writer.add_scalar('test/acc', acc, ep)
+        ret = acc
     
-    else:
-        acc = 1.0
+    elif task_type == 'regression':
+        err = get_mean_squared_error(preds, gts)
+        print ('Epoch[{}/{}] Test Err: {:.4f}'.format(ep, max_epoch, err))
+        print ('='*40)
+
+        writer.add_scalar('test/err', err, ep)
+        ret = err
 
     if hard_sample_mining:
         index2cls_name = {
@@ -186,4 +204,4 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
         writer.add_image('test/confusion_matrix', cm_image, 0)
 
         
-    return acc
+    return ret

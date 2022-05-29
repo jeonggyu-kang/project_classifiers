@@ -6,6 +6,7 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import mean_squared_error
 
 import numpy as np 
 import matplotlib.pyplot as plt 
@@ -122,3 +123,6 @@ def update_hardsample_indice(pred, gt, hardsample_dict, images):
         hardsample_dict[gt_key][pred_key].append(images[idx].unsqueeze(dim=0))
 
     return hardsample_dict
+
+def get_mean_squared_error(pred, gt):
+    return mean_squared_error(y_true=gt, y_pred=pred)

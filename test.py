@@ -30,6 +30,15 @@ def main():
         ckpt_path = os.path.join(log_root, 'best.pt')
         model = get_model(model_name, args['n_class'], ckpt_path = ckpt_path)
 
+        if args['loss'] in ['ce', 'cross-entropy']:
+            task_type = 'classification'
+
+        elif args['loss'] in ['mse', 'mean_squared_error']:
+            task_type = 'regression'
+
+        else:
+            raise ValueError
+
 
         mode = 'test'
         test_loader = get_dataloader(
@@ -52,7 +61,8 @@ def main():
             test_loader = test_loader,
             writer = writer,
             hard_sample_mining = True,
-            confusion_matrix = True
+            confusion_matrix = True,
+            task_type = task_type
         )
 
 

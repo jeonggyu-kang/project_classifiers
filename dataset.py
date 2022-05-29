@@ -2,7 +2,7 @@ import os
 import sys
 
 import numpy as np
-import cv2
+# import cv2
 from PIL import Image
 import pandas as pd
 
@@ -82,6 +82,8 @@ class CoronaryArteryDataset(Dataset):
 
     def __getitem__(self, index):
         dcm_path,  score = self.data[index]
+
+        
         
         # array_path = os.path.join('../Data/resized_224/',dcm_path.replace('.dcm','.npy'))
         array_path = os.path.join(self.data_dir,dcm_path.replace('.dcm','.npy'))
@@ -126,14 +128,21 @@ class AGEDataset(Dataset):
 
     def __getitem__(self, idx):
         dcm_path,  score = self.data[idx] # score dynamic range (600-3000)
+        score = int(score.replace('Y', ''))  #! 1080ti server code
+
         score = (score - self.range_min) / self.range_max
 
 
         array_path = os.path.join(self.data_dir,dcm_path.replace('.dcm','.npy'))
-        image = np.load(array_path)
+        try:
+            image = np.load(array_path)
+        except:
+            image = np.zeros((224,224,1))
 
         image = image - image.min()
         image = image / image.max()
+
+
 
         transformed = self.transform({'image':image})
         image = transformed['image']
