@@ -49,7 +49,8 @@ def main():
             mode = mode,
             batch_size = args['batch_size'],
             num_workers = args['workers_per_gpu'],
-            pipeline = args[mode]['pipeline']
+            pipeline = args[mode]['pipeline'],
+            csv = False
         )
 
         #writer = get_logger(args['save_root'] )

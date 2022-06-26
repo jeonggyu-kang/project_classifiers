@@ -210,6 +210,9 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
 def grad_cam(model, data_loader, writer, cam, export_csv, n_class, task_type):
     model.eval()
     pbar = tqdm(total=len(data_loader))
+
+    print ('Dataset length: {}'.format(len(data_loader)))
+
     for idx, batch in enumerate(data_loader):
         x = batch['x']
         y = batch['y']

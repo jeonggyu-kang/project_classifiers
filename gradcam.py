@@ -62,12 +62,15 @@ def main():
         writer = get_logger(save_path, use_cam=True)
 
 
-        #print(model)
-        #exit()
+        print(model)
+        # exit()
 
         # target layers
         if 'vgg' in model_name:
-            target_layers = [model.feature_extractor.features[-1]]
+            target_layers = [model.feature_extractor.features[-3]]
+
+        elif 'hrnet' in model_name:
+            target_layers =[model.feature_extractor.downsamp_modules[-1][-3]]    
         else:
             print('Please speicfy target layer for your model.')
             exit()

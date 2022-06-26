@@ -15,13 +15,13 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = [ 'vgg16' ],
+    name = [ 'hrnet_w32' ],
     imagenet_pretrained = True,
     n_class = 5,
-    max_epoch = 100,
+    max_epoch = 25,
     learning_rate = 1e-4,
     # mile_stone = None,
-    mile_stone = [80, 90],
+    mile_stone = [15, 20],
     decay_rate = 0.1,
     loss = 'ce',   # cross-entropy (classification)
     #loss = 'mse',    # mean squared error (regresion)
@@ -57,7 +57,7 @@ data_dict = dict(
     dataset = 'CoronaryArteryDataset',
     #dataset = 'AGEDataset',
     save_root = './work_dir',
-    batch_size = 8,
+    batch_size = 24,
     workers_per_gpu = 1,
 
     train = dict(
