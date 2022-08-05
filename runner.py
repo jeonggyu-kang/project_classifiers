@@ -201,8 +201,12 @@ def test(ep, max_epoch, model, test_loader, writer, pbar=None, hard_sample_minin
                     print('{} : {}'.format(text, num_sample))
 
     if confusion_matrix:
-        cm_image = get_confusion_matrix_image(preds, gts)
-        writer.add_image('test/confusion_matrix', cm_image, 0)
+
+        cm_image = get_confusion_matrix_image(preds.detach().cpu(), gts.cpu(), normalize=False)
+        writer.add_image('test/unnorm_cm', cm_image, ep)
+
+        cm_image = get_confusion_matrix_image(preds.detach().cpu(), gts.cpu(), normalize=True)
+        writer.add_image('test/norm_cm', cm_image, ep)        
 
         
     return ret
