@@ -6,9 +6,10 @@ import cv2
 import matplotlib.pylab as plt
 import os
 
-root_dir = "/media/compu/ssd2t/cxr_all/cxr"
+root_dir = "../cxr4"
 dest_dir = "./data"    
-rsize = (224,224)
+rsize = (896,896)
+crop_ratio = 0.15
 
 all_files = []
 
@@ -23,12 +24,26 @@ for (path, dirs, files) in os.walk(root_dir):
             all_files.append(path_file)
 
 
+print (all_files)
+
 def main():
 
     for file in all_files:
         print (file)    
         dco = pydicom.dcmread(root_dir + file)       # dco: dicom_content
         arr = dco.pixel_array
+
+        window_center = dco.WindowCenter
+        window_width = dco.WindowWidth
+
+        l = window_width/256
+
+        arr = arr - (window_center - window_width/2)
+        
+        arr = np.divide(arr, l)
+
+        arr = arr[round(arr.shape[0]*crop_ratio):arr.shape[0]- round(arr.shape[0]*crop_ratio),
+                  round(arr.shape[1]*crop_ratio):arr.shape[1]- round(arr.shape[1]*crop_ratio)]     
         # print (arr.shape)
         diff = arr.shape[0] - arr.shape[1]
 

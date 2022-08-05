@@ -15,37 +15,44 @@ def get_hyperparameters(config = None):
 
 # model-related params
 model_dict = dict(                  
-    name = [ 'hrnet_w32' ],
+    name = [ 'resnet18' ],
     imagenet_pretrained = True,
-    n_class = 5,
-    max_epoch = 25,
+    n_class = 4,
+    max_epoch = 50,
     learning_rate = 1e-4,
     # mile_stone = None,
-    mile_stone = [15, 20],
+    mile_stone = [30, 40],
     decay_rate = 0.1,
     loss = 'ce',   # cross-entropy (classification)
     #loss = 'mse',    # mean squared error (regresion)
-    image_size = (448,448),   # width, height
+    image_size = (896,896),   # width, height
     extra = ['gradcam_test']
 )
 
 train_pipeline = [
     dict(
         type = 'Resize',
-        width = 448,
-        height = 448
+        width = 896,
+        height = 896
+    ),
+    dict(
+        type = 'Sharpness',
+        p = 0.5,
+
     ),
     dict(
         type= 'ToTensor'
+
     ),
 ]
 
 test_pipeline = [
     dict(
         type = 'Resize',
-        width = 448,
-        height = 448
+        width = 896,
+        height = 896
     ),
+
     dict(
         type= 'ToTensor'
     ),
@@ -57,17 +64,17 @@ data_dict = dict(
     dataset = 'CoronaryArteryDataset',
     #dataset = 'AGEDataset',
     save_root = './work_dir',
-    batch_size = 24,
+    batch_size = 18,
     workers_per_gpu = 1,
 
     train = dict(
-        img_dir = '/home/compu/Projects/project_classifiers/data',
-        ann_file = '/home/compu/Projects/project_classifiers/data/train_dataset.parquet',
+        img_dir = '/mnt/project_classifiers/data',
+        ann_file = '/mnt/project_classifiers/data/train_dataset_cac.parquet',
         pipeline = train_pipeline
     ),
     test = dict(
-        img_dir = '/home/compu/Projects/project_classifiers/data',
-        ann_file = '/home/compu/Projects/project_classifiers/data/test_dataset.parquet',
+        img_dir = '/mnt/project_classifiers/data',
+        ann_file = '/mnt/project_classifiers/data/test_dataset_cac.parquet',
         pipeline = test_pipeline
     ),
 )

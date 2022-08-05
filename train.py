@@ -70,7 +70,6 @@ def main():
         save_path = os.path.join(args['save_root'], model_name)
         writer = get_logger(save_path)
 
-
         trainer(                                      # from runner.py
             max_epoch = args['max_epoch'],
             model = model,
@@ -80,9 +79,9 @@ def main():
             optimizer = optimizer,
             scheduler = scheduler,
             meta = {
-                'save_every' : 10,
+                'save_every' : 5,
                 'print_every' : 5,
-                'test_every' : 10
+                'test_every' : 5
             },
             writer = writer,
             task_type = task_type

@@ -70,7 +70,11 @@ def main():
             target_layers = [model.feature_extractor.features[-3]]
 
         elif 'hrnet' in model_name:
-            target_layers =[model.feature_extractor.downsamp_modules[-1][-3]]    
+            target_layers = [model.feature_extractor.downsamp_modules[-1][-3]] 
+
+        elif 'resnet' in model_name:
+            target_layers = [model.feature_extractor.layer4[-2]]
+
         else:
             print('Please speicfy target layer for your model.')
             exit()

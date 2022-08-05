@@ -34,7 +34,7 @@ class CustomizationNet(nn.Module):
 if __name__ == '__main__':
 
 
-    model_names = timm.list_models('*hr*', pretrained=True)
+    model_names = timm.list_models('*rex*', pretrained=True)
     #print(len(model_names))
     print(model_names)
 
