@@ -35,15 +35,21 @@ train_pipeline = [
         width = 896,
         height = 896
     ),
+
+    dict(
+        type = 'Contrastive',
+        p = 0.5,
+        w = 1.1
+    ),
+
     dict(
         type = 'Sharpness',
-        p = 0.5,
-
+        p = 0.0
     ),
+
     dict(
         type= 'ToTensor'
-
-    ),
+    )
 ]
 
 test_pipeline = [
@@ -64,7 +70,7 @@ data_dict = dict(
     dataset = 'CoronaryArteryDataset',
     #dataset = 'AGEDataset',
     save_root = './work_dir',
-    batch_size = 18,
+    batch_size = 14,
     workers_per_gpu = 1,
 
     train = dict(

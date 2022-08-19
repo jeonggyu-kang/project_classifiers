@@ -53,5 +53,3 @@ if __name__ == '__main__':
     pred = model(x)
     print (pred.shape)
     '''
-
-    

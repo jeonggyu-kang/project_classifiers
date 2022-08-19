@@ -7,7 +7,7 @@ dest_dir = "./data"
 input_file = "file_name"
 outcome = "cac_category"
 even_class = True
-train_ratio = 90
+train_ratio = 95
 nclass = 4
 
 
