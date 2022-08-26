@@ -82,3 +82,12 @@ class SaveManager:
             with open(self.result_summary_path, f_mode) as f:
                 f.write('Best Scoire: '+str(self.best_acc)+'\n')
                 print ('Best: Score: {}'.format(self.best_acc))
+
+        
+        target_files = glob.glob(os.path.join(self.save_root, '*.pt'))
+
+        for f in target_files:
+            if (f.split('/')[-1]).split('.')[0] == 'best':
+                continue
+
+            os.remove(f)
