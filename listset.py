@@ -2,12 +2,13 @@ import os
 import pandas as pd
 
 
-source_file = "./cxr_clinical.csv"
+source_file = "./cxr_clinical_new.csv"
 dest_dir = "./data"
 input_file = "file_name"
-outcome = "cac_category"
-even_class = True
-train_ratio = 95
+outcome = "age"
+outcome2 = "sex"
+even_class = False
+train_ratio = 80
 nclass = 4
 
 
@@ -16,12 +17,12 @@ df = pd.read_csv(source_file)
 
 print ("lenth1:", len(df))
 
-df = df.loc[:, [input_file, outcome]]
+df = df.loc[:, [input_file, outcome, outcome2]]
 df.dropna(inplace = True)
 
 print ("lenth2:", len(df))
 
-df.rename(columns = {input_file : 'dcm_path' , outcome : 'score' }, inplace = True)
+df.rename(columns = {input_file : 'dcm_path' , outcome : 'age', outcome2 : 'sex' }, inplace = True)
 
 if even_class:
     classes = df['score'].unique()
